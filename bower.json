@@ -1,0 +1,17 @@
+{
+  "name": "jsoncompare",
+  "description": "POC for comparing 2 JSON fields and getting the changed fields only along with the path.",
+  "main": "server.js",
+  "authors": [
+    "Surya"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/itzmesurya/JSONCompare",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,13 @@
+.json-textarea {
+    /* border-radius: 25px; */
+    width: 100%;
+}
+
+.navbar {
+    background-color: black;
+}
+
+.btn-float-right>button {
+    float: right;
+    margin-right: 25px;
+}

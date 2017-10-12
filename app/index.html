@@ -1,0 +1,57 @@
+<html ng-app="jsoncompare">
+
+<head>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/json-diff/json-diff.js"></script>
+    <script src="app.module.js"></script>
+    <script src="controllers/home.controller.js"></script>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style/style.css">
+</head>
+
+<body ng-controller="HomeController as vm">
+    <div class="navbar">
+        <a class="navbar-brand" href="#">JSON Diff POC</a>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <textarea ng-model="vm.leftJson" name="leftJsonTextArea" id="leftJsonTextArea" ng-change="vm.textAreaChange($event, 'left')" class="json-textarea" cols="30" rows="11"></textarea>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <textarea ng-model="vm.rightJson" name="rightJsonTextArea" id="rightJsonTextArea" ng-change="vm.textAreaChange($event, 'right')" class="json-textarea" cols="30" rows="11"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="row btn-float-right">
+            <button type="button" ng-click="vm.compareAndGetDiffJson(vm.leftJson, vm.rightJson)" class="btn btn-primary">Get JSON Diff</button>
+        </div>
+        <br>
+        
+        <div class="row">
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <textarea ng-model="vm.diffObjectString" name="diffJsonTextArea" id="diffJsonTextArea" class="json-textarea" cols="30" rows="11"></textarea>
+            </div>
+            
+        </div>
+        
+        <br>
+        <div  class="row">
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+            </div>
+            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                <pre ng-repeat="item in vm.keysArray">{{item}}</pre>
+            </div>
+            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                <pre ng-repeat="item in vm.valsArray track by $index">{{item}}</pre>
+            </div>
+            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
