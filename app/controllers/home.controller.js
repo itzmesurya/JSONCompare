@@ -5,52 +5,67 @@
         .module('jsoncompare')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$scope', '$parse'];
+    HomeController.$inject = ['$scope', '$parse', '$window'];
 
-    function HomeController($scope, $parse) {
+    function HomeController($scope, $parse, $window) {
         var vm = this;
+        var _ = window._;
         vm.leftJson = JSON.stringify({
-            "key1": "val1",
-            "key2": "val2",
-            "key3": {
-                "key4": "val4",
-                "key5": "val5",
-                "key6": {
-                    "key7": "val7",
-                    "key8": {
-                        "key9": "val9",
-                        "key10": "val10",
-                        "key11": ["val11a", "val11b", {
-                            "foo": "bar"
-                        }],
-                        "key12": 34,
-                        "key13": {
-                            "key14": true
-                        }
-                    }
+            "key": "Email_Preferences.Row.EMAILID",
+            "id": "EmailID",
+            "type": "ep-text",
+            "className": "col-md-8 col-sm-8 marginLeft5 inputText",
+            "templateOptions": {
+                "label": "Email",
+                "validator": "Email",
+                "maxlength": "100",
+                "onBlur": {
+                    "isFunction": true,
+                    "params": [
+                        "$viewValue",
+                        "scope",
+                        "form"
+                    ],
+                    "body": "if($viewValue === undefined){form.model.ConfirmEmail = '';form.form.ConfirmEmailID.$setValidity('match', true);}"
+                }
+            },
+            "expressionProperties": {
+                "templateOptions.required": "model.Email_Preferences.Row.ALLOWED === 'TRUE'"
+            },
+            "validation": {
+                "messages": {
+                    "required": "\"Email Address required\"",
+                    "maxlength": "\"Max length of Email is \" + to.maxlength"
                 }
             }
         }, undefined, 2);
 
         vm.rightJson = JSON.stringify({
-            "key1": "val1",
-            "key2": "val2a",
-            "key3": {
-                "key4": "val4",
-                "key5": "val5",
-                "key6": {
-                    "key7": "val7",
-                    "key8": {
-                        "key9": "val9",
-                        "key10": "val10a",
-                        "key11": ["val11ab", "val11bb", {
-                            "foo": "bar"
-                        }],
-                        "key12": 34,
-                        "key13": {
-                            "key14": true
-                        }
-                    }
+            "key": "Email_Preferences.Row.EMAILID",
+            "id": "EmailID",
+            "type": "ep-text",
+            "className": "col-md-8 col-sm-8 marginLeft5 inputText",
+            "templateOptions": {
+                "label": "Email",
+                "validator": "Email",
+                "maxlength": "100",
+                "onBlur": {
+                    "isFunction": true,
+                    "params": [
+                        "$viewValue",
+                        "scope",
+                        "form"
+                    ],
+                    "body": "if($viewValue === undefined){form.model.ConfirmEmail = '';form.form.ConfirmEmailID.$setValidity('match', true);}"
+                }
+            },
+            "expressionProperties": {
+                "templateOptions.required": "model.Email_Preferences.Row.ALLOWED === 'TRUE'"
+            },
+            "validation": {
+                "messages": {
+                    "required": "\"Email Address required\"",
+                    "maxlength": "\"Max length of Email is \" + to.maxlength"
                 }
             }
         }, undefined, 2);
@@ -110,6 +125,7 @@
          * Compare 2 objects
          */
         vm.compareAndGetDiffJson = function (leftJson, rightJson) {
+            vm.diffObject = {};
             var leftJsonObj = JSON.parse(leftJson);
             var righJsonObj = JSON.parse(rightJson);
             var leftStringArray = parseKeys(leftJsonObj);
@@ -119,8 +135,9 @@
                 /** check if the left JSON contains this property */
                 if (checkPropertyPathUsingEval(leftJsonObj, rightString)) {
                     /** check if the value is same on the right json */
+                    var valueCheck = valueCompare(eval(cleanStringForCompare('leftJsonObj' + rightString)), eval(cleanStringForCompare('righJsonObj' + rightString)));
                     var checkBool = eval(cleanStringForCompare('leftJsonObj' + rightString)) === eval(cleanStringForCompare('righJsonObj' + rightString));
-                    if (!checkBool) {
+                    if (!valueCheck) {
                         vm.assignValTo(rightString, righJsonObj);
                     }
                 } else {
@@ -144,11 +161,52 @@
             return dirtyString.replace(/'/g, '"');
         }
 
+        var valueCompare = function (leftValue, rightValue) {
+            /** Check the type */
+            if (leftValue.constructor === rightValue.constructor) {
+                /** in case the objects are of the same type */
+                /** check if they are array */
+                if (leftValue.constructor === [].constructor) {
+                    /** compare arrays */
+                    return compareArrays(leftValue, rightValue);
+                    /** check if they are objects */
+                } else if (leftValue.constructor === {}.constructor) {
+                    /** compare objects */
+                    return compareObjects(leftValue, rightValue);
+                } else {
+                    return leftValue === rightValue;
+                }
+            } else {
+                /** in case the objects are not of the same type */
+                return false;
+            }
+        }
+
+        var compareObjects = function (leftObject, rightObject) {
+            /** if object compare each property  */
+            return JSON.stringify(leftObject) === JSON.stringify(rightObject);
+        }
+
+        var compareArrays = function (leftArray, rightArray) {
+            /** if object compare each item  */
+            if (leftArray.length === rightArray.length) {
+                for (var index = 0; index < leftArray.length; index++) {
+                    var element = leftArray[index];
+                    if (!valueCompare(leftArray[index], rightArray[index])) {
+                        return false;
+                    }
+                }
+            } else {
+                return false;
+            }
+            return true;
+        }
+
         vm.assignValTo = function (propString, rightJson, diffObjVariableName) {
             var _diffObjVariableName = diffObjVariableName || 'vm.diffObject';
             if (vm.checkAndCreatePropertyIfNeeded(propString))
                 eval(_diffObjVariableName + propString + '= rightJson' + propString);
-            console.log(vm.diffObject);
+            //console.log(vm.diffObject);
         }
 
         vm.getPropConcatArray = function (propString) {
