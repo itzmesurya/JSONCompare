@@ -73,11 +73,24 @@
         vm.diffObject = {};
 
         vm.textAreaChange = function (event, leftOrRight) {
+            var parsedObj = null;
             switch (leftOrRight) {
                 case 'left':
-                    vm.leftJson = JSON.stringify(JSON.parse(vm.leftJson), undefined, 2);
+                    parsedObj = JSON.parse(vm.leftJson);
+                    if (parsedObj.constructor === [].constructor) {
+                        vm.leftJson = stringifyArray(parsedObj);
+                    } else {
+                        vm.leftJson = JSON.stringify(JSON.parse(vm.leftJson), undefined, 2);
+                    }
                     break;
                 case 'right':
+                    parsedObj = JSON.parse(vm.rightJson);
+                    if (parsedObj.constructor === [].constructor) {
+                        vm.rightJson = stringifyArray(parsedObj);
+                    } else {
+                        vm.rightJson = JSON.stringify(JSON.parse(vm.rightJson), undefined, 2);
+                    }
+                    break;
                     vm.rightJson = JSON.stringify(JSON.parse(vm.rightJson), undefined, 2);
                     break;
                 default:
@@ -119,6 +132,20 @@
                 }
             }
             return keysArray;
+        }
+
+        /** stringify an array */
+        var stringifyArray = function (arrayObj) {
+            var resultString = '[';
+            arrayObj.forEach(function (element) {
+                resultString = resultString + JSON.stringify(element, undefined, 2) + ',';
+            }, this);
+            resultString = trimCommas(resultString) + ']';
+            return resultString;
+        }
+
+        var trimCommas = function (str) {
+            return str.replace(/(^,)|(,$)/g, "");
         }
 
         /**
