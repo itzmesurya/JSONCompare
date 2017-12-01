@@ -6,6 +6,8 @@
     <script src="../bower_components/angular/angular.min.js"></script>
     <script src="../bower_components/underscore/underscore-min.js"></script>
     <script src="../bower_components/json-diff/json-diff.js"></script>
+    <script src="../extlibs/deep-diff-0.3.8.min.js"></script>
+    <script src="../extlibs/jsonQ.min.js"></script>
     <script src="app.module.js"></script>
     <script src="controllers/home.controller.js"></script>
     <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -39,6 +41,12 @@
             
         </div>
         
+        <br>
+        <div class="row">
+            <div class="diffObj" ng-repeat="diff in vm.differences">
+                <pre>{{diff | json}}</pre>
+            </div>
+        </div>
         <br>
         <div  class="row">
             <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">

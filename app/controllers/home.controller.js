@@ -11,63 +11,139 @@
         var vm = this;
         var _ = window._;
         vm.leftJson = JSON.stringify({
-            "key": "Email_Preferences.Row.EMAILID",
-            "id": "EmailID",
-            "type": "ep-text",
-            "className": "col-md-8 col-sm-8 marginLeft5 inputText",
-            "templateOptions": {
-                "label": "Email",
-                "validator": "Email",
-                "maxlength": "100",
-                "onBlur": {
-                    "isFunction": true,
-                    "params": [
-                        "$viewValue",
-                        "scope",
-                        "form"
-                    ],
-                    "body": "if($viewValue === undefined){form.model.ConfirmEmail = '';form.form.ConfirmEmailID.$setValidity('match', true);}"
+            "apiCacheManager": [{
+                    "id": "olca_apiCacheManager_sectionTitle",
+                    "template": "<span ng-show='formState.isProgramNull'>{{formState.isProgramNull}}<h4 class='no-margin'>No Data Cached</h4></span>"
+                },
+                {
+                    "id": "olca_apiCacheManager_programName",
+                    "key": "PROGRAM_OBJ",
+                    "type": "ep-select",
+                    "className": "col-sm-9",
+                    "templateOptions": {
+                        "label": "Program Name",
+                        "valueProp": "Program_Name",
+                        "labelProp": "Program_Name",
+                        "actualModel": "selectedProgram"
+                    },
+                    "expressionProperties": {
+                        "templateOptions.options": "formState.programCacheData",
+                        "hide": "formState.isProgramNull"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_programBtn",
+                    "className": "col-sm-3",
+                    "type": "ep-button",
+                    "templateOptions": {
+                        "text": "Delete cache for program",
+                        "btn-type": "primary",
+                        "onClick": "formState.deleteProgramCache()"
+                    },
+                    "expressionProperties": {
+                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_keyName",
+                    "key": "KEY_OBJ",
+                    "type": "ep-select",
+                    "className": "col-sm-9",
+                    "templateOptions": {
+                        "label": "Key Name",
+                        "valueProp": "Key_Name",
+                        "labelProp": "Key_Name",
+                        "actualModel": "selectedKey"
+                    },
+                    "expressionProperties": {
+                        "templateOptions.options": "formState.cachedProgramKeys",
+                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_keyBtn",
+                    "className": "col-sm-3",
+                    "type": "ep-button",
+                    "templateOptions": {
+                        "text": "Delete cache for key",
+                        "btn-type": "primary",
+                        "onClick": "formState.deleteKeyCache()"
+                    },
+                    "expressionProperties": {
+                        "hide": "formState.isProgramNull || formState.hideDelKeyBtn"
+                    }
                 }
-            },
-            "expressionProperties": {
-                "templateOptions.required": "model.Email_Preferences.Row.ALLOWED === 'TRUE'"
-            },
-            "validation": {
-                "messages": {
-                    "required": "\"Email Address required\"",
-                    "maxlength": "\"Max length of Email is \" + to.maxlength"
-                }
-            }
+            ]
         }, undefined, 2);
 
         vm.rightJson = JSON.stringify({
-            "key": "Email_Preferences.Row.EMAILID",
-            "id": "EmailID",
-            "type": "ep-text",
-            "className": "col-md-8 col-sm-8 marginLeft5 inputText",
-            "templateOptions": {
-                "label": "Email",
-                "validator": "Email",
-                "maxlength": "100",
-                "onBlur": {
-                    "isFunction": true,
-                    "params": [
-                        "$viewValue",
-                        "scope",
-                        "form"
-                    ],
-                    "body": "if($viewValue === undefined){form.model.ConfirmEmail = '';form.form.ConfirmEmailID.$setValidity('match', true);}"
+            "apiCacheManager": [{
+                    "id": "olca_apiCacheManager_sectionTitle",
+                    "template": "<span ng-show='formState.isProgramNull'>{{formState.isProgramNull}}<h4 class='no-margin'>No Data Cached</h4></span>",
+                    "templateOptions": {
+                        "newKey": "newVal"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_programName",
+                    "key": "PROGRAM_OBJ",
+                    "type": "ep-select",
+                    "className": "col-sm-9",
+                    "templateOptions": {
+                        "label": "Program Name",
+                        "valueProp": "Program_Name",
+                        "labelProp": "Program_Name",
+                        "actualModel": "selectedProgram",
+                        "newKey": "newVal"
+                    },
+                    "expressionProperties": {
+                        "templateOptions.options": "formState.programCacheData",
+                        "hide": "formState.isProgramNull"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_programBtn",
+                    "className": "col-sm-3",
+                    "type": "ep-button",
+                    "templateOptions": {
+                        "text": "Delete cache for program new",
+                        "btn-type": "primary",
+                        "onClick": "formState.deleteProgramCache()"
+                    },
+                    "expressionProperties": {
+                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_keyName",
+                    "key": "KEY_OBJ",
+                    "type": "ep-select",
+                    "className": "col-sm-9",
+                    "templateOptions": {
+                        "label": "Key Name",
+                        "valueProp": "Key_Name",
+                        "labelProp": "Key_Name",
+                        "actualModel": "selectedKey"
+                    },
+                    "expressionProperties": {
+                        "templateOptions.options": "formState.cachedProgramKeys",
+                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    }
+                },
+                {
+                    "id": "olca_apiCacheManager_keyBtn",
+                    "className": "col-sm-3",
+                    "type": "ep-button",
+                    "templateOptions": {
+                        "text": "Delete cache for key",
+                        "btn-type": "primary",
+                        "onClick": "formState.deleteKeyCache()"
+                    },
+                    "expressionProperties": {
+                        "hide": "formState.isProgramNull || formState.hideDelKeyBtn"
+                    }
                 }
-            },
-            "expressionProperties": {
-                "templateOptions.required": "model.Email_Preferences.Row.ALLOWED === 'TRUE'"
-            },
-            "validation": {
-                "messages": {
-                    "required": "\"Email Address required\"",
-                    "maxlength": "\"Max length of Email is \" + to.maxlength"
-                }
-            }
+            ]
         }, undefined, 2);
 
         vm.diffObject = {};
@@ -151,27 +227,51 @@
         /**
          * Compare 2 objects
          */
+        // vm.compareAndGetDiffJson = function (leftJson, rightJson) {
+        //     vm.diffObject = {};
+        //     var leftJsonObj = JSON.parse(leftJson);
+        //     var righJsonObj = JSON.parse(rightJson);
+        //     var leftStringArray = parseKeys(leftJsonObj);
+        //     var rightStringArray = parseKeys(righJsonObj);
+        //     for (var index = 0; index < rightStringArray.length; index++) {
+        //         var rightString = rightStringArray[index];
+        //         /** check if the left JSON contains this property */
+        //         if (checkPropertyPathUsingEval(leftJsonObj, rightString)) {
+        //             /** check if the value is same on the right json */
+        //             var valueCheck = valueCompare(eval(cleanStringForCompare('leftJsonObj' + rightString)), eval(cleanStringForCompare('righJsonObj' + rightString)));
+        //             var checkBool = eval(cleanStringForCompare('leftJsonObj' + rightString)) === eval(cleanStringForCompare('righJsonObj' + rightString));
+        //             if (!valueCheck) {
+        //                 vm.assignValTo(rightString, righJsonObj);
+        //             }
+        //         } else {
+        //             vm.assignValTo(rightString, righJsonObj);
+        //         }
+        //     }
+        //     vm.diffObjectString = JSON.stringify(vm.diffObject, undefined, 2);
+        // }
+
+        vm.differences = [];
         vm.compareAndGetDiffJson = function (leftJson, rightJson) {
             vm.diffObject = {};
             var leftJsonObj = JSON.parse(leftJson);
             var righJsonObj = JSON.parse(rightJson);
-            var leftStringArray = parseKeys(leftJsonObj);
-            var rightStringArray = parseKeys(righJsonObj);
-            for (var index = 0; index < rightStringArray.length; index++) {
-                var rightString = rightStringArray[index];
-                /** check if the left JSON contains this property */
-                if (checkPropertyPathUsingEval(leftJsonObj, rightString)) {
-                    /** check if the value is same on the right json */
-                    var valueCheck = valueCompare(eval(cleanStringForCompare('leftJsonObj' + rightString)), eval(cleanStringForCompare('righJsonObj' + rightString)));
-                    var checkBool = eval(cleanStringForCompare('leftJsonObj' + rightString)) === eval(cleanStringForCompare('righJsonObj' + rightString));
-                    if (!valueCheck) {
-                        vm.assignValTo(rightString, righJsonObj);
-                    }
-                } else {
-                    vm.assignValTo(rightString, righJsonObj);
-                }
-            }
-            vm.diffObjectString = JSON.stringify(vm.diffObject, undefined, 2);
+            var deep = DeepDiff.noConflict();
+            // vm.diffObjectString = JSON.stringify(vm.diffObject, undefined, 2);
+            // deep.observableDiff(leftJsonObj, righJsonObj, function (d) {
+            //     vm.differences.push(d);
+            // });
+            vm.differences = deep.diff(leftJsonObj, righJsonObj);
+            vm.testPathSetValue(vm.differences);
+        }
+
+
+        /** Method to test jsonQ */
+        vm.testPathSetValue = function (differences) {
+            var overrideJSON = jsonQ({});
+            differences.forEach(element => {
+                overrideJSON.setPathValue(element.path, element.rhs);
+            });
+            console.log(overrideJSON.jsonQ_root);
         }
 
         var checkPropertyPathUsingEval = function (obj, objPropPath) {
