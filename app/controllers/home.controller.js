@@ -11,137 +11,939 @@
         var vm = this;
         var _ = window._;
         vm.leftJson = JSON.stringify({
-            "apiCacheManager": [{
-                    "id": "olca_apiCacheManager_sectionTitle",
-                    "template": "<span ng-show='formState.isProgramNull'>{{formState.isProgramNull}}<h4 class='no-margin'>No Data Cached</h4></span>"
+            "title": [{
+                "id": "clutch_dealerCoupons_title_Html",
+                "template": "<div class='col-md-12'><h3>Communications / Model Triggers</h3><hr class='marginTop10 marginBot10'/></div>"
+            }],
+            "MainForm": [{
+                    "id": "clutch_dealerCoupons_mainform_html1",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
                 },
                 {
-                    "id": "olca_apiCacheManager_programName",
-                    "key": "PROGRAM_OBJ",
-                    "type": "ep-select",
-                    "className": "col-sm-9",
+                    "id": "clutch_dealerCoupons_mainform_communicationType",
+                    "key": "COMMUNICATION_TYPE",
+                    "type": "ep-radio",
+                    "className": "col-sm-12",
                     "templateOptions": {
-                        "label": "Program Name",
-                        "valueProp": "Program_Name",
-                        "labelProp": "Program_Name",
-                        "actualModel": "selectedProgram"
+                        "options": [{
+                                "name": "Touchpoints",
+                                "value": "0"
+                            },
+                            {
+                                "name": "Model Triggers",
+                                "value": "4"
+                            },
+                            {
+                                "name": "Internet Offers",
+                                "value": "5"
+                            },
+                            {
+                                "name": "Targeted Online Advertising",
+                                "value": "6"
+                            }
+                        ],
+                        "required": true,
+                        "title": "this is true"
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "Select an option."
+                        }
                     },
                     "expressionProperties": {
-                        "templateOptions.options": "formState.programCacheData",
-                        "hide": "formState.isProgramNull"
+                        "onBlur": "formState.communicationTypeChange(model.COMMUNICATION_TYPE, {CAMPAIGN_FLAG:model.COMMUNICATION_TYPE}, 'vm.formModel.COMMUNICATION_OBJID = undefined')",
+                        "templateOptions.foo": "model.COMMUNICATION_TYPE ? model.COMMUNICATION_TYPE : model.COMMUNICATION_TYPE=\"0\""
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_programBtn",
-                    "className": "col-sm-3",
+                    "id": "clutch_dealerCoupons_mainform_html2",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-xs-12 col-sm-12 ",
+                    "$$hashKey": "clutch_dealerCoupons_mainform_fieldGroup1",
+                    "fieldGroup": [{
+                            "id": "clutch_dealerCoupons_mainform_fieldGroup1_touchpointsddl",
+                            "key": "COMMUNICATION_OBJ",
+                            "type": "ep-searchableDropdown",
+                            "className": "col-md-8 col-lg-8",
+                            "templateOptions": {
+                                "actualModel": "COMMUNICATION_OBJID",
+                                "label": "Touchpoints",
+                                "title": "Touchpoints",
+                                "searchableinitKey": "Communications",
+                                "valueProp": "OBJID",
+                                "labelProp": "NAME",
+                                "isSelectOptionRequired": true,
+                                "required": true,
+                                "requiresInitParams": "true",
+                                "updateModel": "model.TOUCHPOINT_LONG_DESCRIPTION = model.COMMUNICATION_OBJ.LONG_DESCRIPTION"
+                            },
+                            "validation": {
+                                "messages": {
+                                    "required": "\"Touchpoint is required\""
+                                }
+                            },
+                            "expressionProperties": {
+                                "templateOptions.filterText": "{\"CAMPAIGN_FLAG\":model.COMMUNICATION_TYPE?model.COMMUNICATION_TYPE:\"0\"}",
+                                "templateOptions.initParams": "{\"pi_input_xml\":{\"LOOKUP_COLUMN_NAME\":\"PROGRAM_NAME\",\"LOOKUP_COLUMN_VALUE\":formState.programName}}",
+                                "templateOptions.label": "formState.communicationTypeName",
+                                "onblur": "formState.touchpontddlChange(model.COMMUNICATION_OBJ, 'COMMUNICATION_OBJ')",
+                                "templateOptions.disabled": "!model.COMMUNICATION_TYPE"
+                            }
+                        },
+                        {
+                            "className": " float-right",
+                            "id": "clutch_dealerCoupons_mainform_fieldGroup1_addnewButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "onClick": "formState.addCoupon()",
+                                "text": "<div><i class=\"ace-icon fa fa-plus-square bigger-110\"></i>&nbsp;Add Coupon</div>",
+                                "type": "submit",
+                                "btnType": "primary ",
+                                "title": "This button allows you to Add information"
+                            },
+                            "hideExpression": "!model.COMMUNICATION_OBJID"
+                        },
+                        {
+                            "key": "TOUCHPOINT_LONG_DESCRIPTION",
+                            "type": "ep-label",
+                            "id": "clutch_dealerCoupons_modelform_touchpointDescription",
+                            "className": "col-md-8 col-lg-8  no-horizontal-padding",
+                            "templateOptions": {
+                                "title": "Description",
+                                "label": "Description:"
+                            },
+                            "hideExpression": "!model.COMMUNICATION_OBJID"
+                        }
+                    ]
+                },
+                {
+                    "id": "clutch_dealerCoupons_mainform_html3",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "key": "formData",
+                    "id": "clutch_dealerCoupons_mainform_grid",
+                    "type": "ep-genericcrud",
+                    "className": "col-md-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "",
+                        "enableFiltering": true,
+                        "enableSorting": true,
+                        "enableColumnResizing": true,
+                        "paginationPageSizes": [
+                            15,
+                            25,
+                            50
+                        ],
+                        "paginationPageSize": 15,
+                        "enableRowSelection": true,
+                        "enableSelectAll": true,
+                        "enablePaginationControls": true,
+                        "columnDefs": [{
+                                "field": "Action",
+                                "displayName": "Action",
+                                "enableFiltering": false,
+                                "enableSorting": false,
+                                "enableHiding": false,
+                                "width": "80",
+                                "cellTemplate": "<div class=\"col-xs-12 no-horizontal-padding text-center\"><button type=\"button\"class=\"btn btn-xs btn-primary\" id=\"{{ row.entity.OBJID }}\"ng-click=\"grid.appScope.formState.upsert(row.entity, 'UPDATE', grid.appScope)\"  title=\"This button allows you to Edit information\"><span class=\"glyphicon glyphicon-pencil\"></span><span ng-bind-html=\"grid.appScope.to.editActionDisplay\"></span></button>&nbsp;<button type=\"button\"class=\"btn btn-danger btn-xs\" id=\"{{ row.entity.OBJID }}\"ng-click=\"grid.appScope.formState.deleteData(row.entity, 'DELETE', grid.appScope)\" title=\"This button allows you to Delete information\" ><span class=\"glyphicon glyphicon-trash\"></span><span ng-bind-html=\"grid.appScope.to.editActionDisplay\"></span></button></div>",
+                                "cellClass": "no-horizontal-padding"
+                            },
+                            {
+                                "field": "COMMUNICATION_NAME",
+                                "displayName": "Category",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "200"
+                            },
+                            {
+                                "field": "COUPON_TITLE",
+                                "displayName": "Coupon Title",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "200"
+                            },
+                            {
+                                "field": "COUPON_SUBTITLE",
+                                "displayName": "Coupon Subtitle",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "170"
+                            },
+                            {
+                                "field": "PRICE",
+                                "displayName": "Price",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "100"
+                            }
+                        ],
+                        "primaryid": "OBJID",
+                        "editActionDisplay": "",
+                        "deleteActionDisplay": "",
+                        "editFormHeader": "Coupon",
+                        "modalSize": "md"
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_mainform_html4",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-md-12 col-sm-12 text-right",
+                    "id": "clutch_dealerCoupons_mainform_submit",
                     "type": "ep-button",
                     "templateOptions": {
-                        "text": "Delete cache for program",
-                        "btn-type": "primary",
-                        "onClick": "formState.deleteProgramCache()"
+                        "text": "Continue",
+                        "onClick": "formState.continue()",
+                        "type": "submit",
+                        "btnType": "primary ",
+                        "title": "This button allows you to Continue to next form"
+                    }
+                }
+            ],
+            "ModelForm": [{
+                    "key": "COMMUNICATION_NAME",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_touchpointlabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
+                    "templateOptions": {
+                        "title": "Touchpoint",
+                        "label": "Touchpoint"
                     },
                     "expressionProperties": {
-                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                        "templateOptions.label": "formState.communicationTypeName"
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_keyName",
-                    "key": "KEY_OBJ",
-                    "type": "ep-select",
-                    "className": "col-sm-9",
+                    "id": "clutch_dealerCoupons_modelform_html1",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "key": "BRAND",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_brandlabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
                     "templateOptions": {
-                        "label": "Key Name",
-                        "valueProp": "Key_Name",
-                        "labelProp": "Key_Name",
-                        "actualModel": "selectedKey"
+                        "title": "Brand",
+                        "label": "Brand"
                     },
-                    "expressionProperties": {
-                        "templateOptions.options": "formState.cachedProgramKeys",
-                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    "hideExpression": "model.CAMPAIGN_FLAG == 5"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html2",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>",
+                    "hideExpression": "model.CAMPAIGN_FLAG == 0"
+                },
+                {
+                    "key": "ATTRIB_VALUE",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_namelabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
+                    "templateOptions": {
+                        "title": "Status",
+                        "label": "Status"
+                    },
+                    "hideExpression": "model.CAMPAIGN_FLAG != 4"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html4",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_positionlabel",
+                    "key": "POSITION",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "title": "Position",
+                        "label": "Position",
+                        "required": true,
+                        "maxLength": 1,
+                        "validator": "integer"
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "\"Position is required\"",
+                            "pattern": "\"Invalid Position\""
+                        }
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 4 || formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html5",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_coupontitle",
+                    "key": "COUPON_TITLE",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Coupon Title",
+                        "required": true
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6",
+                    "validation": {
+                        "messages": {
+                            "required": "\"Coupon Title is required\""
+                        }
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_keyBtn",
-                    "className": "col-sm-3",
-                    "type": "ep-button",
+                    "id": "clutch_dealerCoupons_modelform_html6",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_couponsubtitle",
+                    "key": "COUPON_SUBTITLE",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
                     "templateOptions": {
-                        "text": "Delete cache for key",
-                        "btn-type": "primary",
-                        "onClick": "formState.deleteKeyCache()"
+                        "label": "Coupon Subtitle",
+                        "required": true
                     },
-                    "expressionProperties": {
-                        "hide": "formState.isProgramNull || formState.hideDelKeyBtn"
+                    "validation": {
+                        "messages": {
+                            "required": "\"Coupon Subtitle is required\""
+                        }
                     }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html14",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_coupon_text",
+                    "key": "COUPON_TEXT",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Coupon Text",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html7",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_price",
+                    "key": "PRICE",
+                    "type": "ep-text",
+                    "className": "col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Price",
+                        "maxLength": 50,
+                        "required": false
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "\"Price is required\""
+                        }
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html13",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_price2",
+                    "key": "PRICE2",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Price 2",
+                        "maxLength": 50
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html8",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_expFactor",
+                    "key": "EXP_FACTOR_OBJ",
+                    "type": "ep-searchableDropdown",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "actualModel": "EXP_FACTOR",
+                        "label": "Expiration date(days)",
+                        "title": "Coupon Title",
+                        "valueProp": "TITLE",
+                        "labelProp": "TITLE",
+                        "options": [{
+                                "TITLE": "30"
+                            },
+                            {
+                                "TITLE": "60"
+                            },
+                            {
+                                "TITLE": "90"
+                            },
+                            {
+                                "TITLE": "120"
+                            },
+                            {
+                                "TITLE": "None"
+                            }
+                        ]
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html9",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer1",
+                    "key": "DISCLAIMER_1",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 1",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html10",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer2",
+                    "key": "DISCLAIMER_2",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 2",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html11",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer3",
+                    "key": "DISCLAIMER_3",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 3",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html12",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-xs-12 col-sm-12",
+                    "$$hashKey": "clutch_dealerCoupons_modelform_fieldGroup1",
+                    "fieldGroup": [{
+                            "className": "pull-right  no-horizontal-padding ",
+                            "id": "clutch_dealerCoupons_modelform_fieldGroup1_closeButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "text": "<i class=\"ace-icon fa fa-close bigger-110\"></i>&nbsp;Close",
+                                "onClick": "formState.close(model,this.form)",
+                                "type": "submit",
+                                "btnType": "btn  btn-primary",
+                                "title": "This button allows you to Close information"
+                            }
+                        },
+                        {
+                            "className": "pull-right no-horizontal-padding ",
+                            "id": "clutch_dealerCoupons_modelform_fieldGroup1_saveButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "text": "<i class=\"ace-icon fa fa-save\"></i>&nbsp;Save/Done",
+                                "onClick": "formState.upsertData(model,this.form,true)",
+                                "type": "submit",
+                                "btnType": "primary ",
+                                "title": "This button allows you to Save information"
+                            }
+                        }
+                    ]
                 }
             ]
         }, undefined, 2);
 
         vm.rightJson = JSON.stringify({
-            "apiCacheManager": [{
-                    "id": "olca_apiCacheManager_sectionTitle",
-                    "template": "<span ng-show='formState.isProgramNull'>{{formState.isProgramNull}}<h4 class='no-margin'>No Data Cached</h4></span>",
-                    "templateOptions": {
-                        "newKey": "newVal"
-                    }
+            "title": [{
+                "id": "clutch_dealerCoupons_title_Html",
+                "template": "<div class='col-md-12'><h3>Communications / Model Triggers</h3><hr class='marginTop10 marginBot10'/></div>"
+            }],
+            "MainForm": [{
+                    "id": "clutch_dealerCoupons_mainform_html1",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
                 },
                 {
-                    "id": "olca_apiCacheManager_programName",
-                    "key": "PROGRAM_OBJ",
-                    "type": "ep-select",
-                    "className": "col-sm-9",
+                    "id": "clutch_dealerCoupons_mainform_communicationType",
+                    "key": "COMMUNICATION_TYPE",
+                    "type": "ep-radio",
+                    "className": "col-sm-12",
                     "templateOptions": {
-                        "label": "Program Name",
-                        "valueProp": "Program_Name",
-                        "labelProp": "Program_Name",
-                        "actualModel": "selectedProgram",
-                        "newKey": "newVal"
+                        "options": [{
+                                "name": "Touchpoints",
+                                "value": "0"
+                            },
+                            {
+                                "name": "Model Triggers",
+                                "value": "4"
+                            },
+                            {
+                                "name": "Internet Offers",
+                                "value": "5"
+                            },
+                            {
+                                "name": "Targeted Online Advertising",
+                                "value": "6"
+                            }
+                        ],
+                        "required": true,
+                        "title": "this is true"
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "Select an option."
+                        }
                     },
                     "expressionProperties": {
-                        "templateOptions.options": "formState.programCacheData",
-                        "hide": "formState.isProgramNull"
+                        "onBlur": "formState.communicationTypeChange(model.COMMUNICATION_TYPE, {CAMPAIGN_FLAG:model.COMMUNICATION_TYPE}, 'vm.formModel.COMMUNICATION_OBJID = undefined')",
+                        "templateOptions.foo": "model.COMMUNICATION_TYPE ? model.COMMUNICATION_TYPE : model.COMMUNICATION_TYPE=\"0\""
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_programBtn",
-                    "className": "col-sm-3",
+                    "id": "clutch_dealerCoupons_mainform_html2",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-xs-12 col-sm-12 ",
+                    "$$hashKey": "clutch_dealerCoupons_mainform_fieldGroup1",
+                    "fieldGroup": [{
+                            "id": "clutch_dealerCoupons_mainform_fieldGroup1_touchpointsddl",
+                            "key": "COMMUNICATION_OBJ",
+                            "type": "ep-searchableDropdown",
+                            "className": "col-md-8 col-lg-8",
+                            "templateOptions": {
+                                "actualModel": "COMMUNICATION_OBJID",
+                                "label": "Touchpoints",
+                                "title": "Touchpoints",
+                                "searchableinitKey": "Communications",
+                                "valueProp": "OBJID",
+                                "labelProp": "NAME",
+                                "isSelectOptionRequired": true,
+                                "required": true,
+                                "requiresInitParams": "true",
+                                "updateModel": "model.TOUCHPOINT_LONG_DESCRIPTION = model.COMMUNICATION_OBJ.LONG_DESCRIPTION"
+                            },
+                            "validation": {
+                                "messages": {
+                                    "required": "\"Touchpoint is required\""
+                                }
+                            },
+                            "expressionProperties": {
+                                "templateOptions.filterText": "{\"CAMPAIGN_FLAG\":model.COMMUNICATION_TYPE?model.COMMUNICATION_TYPE:\"0\"}",
+                                "templateOptions.initParams": "{\"pi_input_xml\":{\"LOOKUP_COLUMN_NAME\":\"PROGRAM_NAME\",\"LOOKUP_COLUMN_VALUE\":formState.programName}}",
+                                "templateOptions.label": "formState.communicationTypeName",
+                                "onblur": "formState.touchpontddlChange(model.COMMUNICATION_OBJ, 'COMMUNICATION_OBJ')",
+                                "templateOptions.disabled": "!model.COMMUNICATION_TYPE"
+                            }
+                        },
+                        {
+                            "className": " float-right",
+                            "id": "clutch_dealerCoupons_mainform_fieldGroup1_addnewButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "onClick": "formState.addCoupon()",
+                                "text": "<div><i class=\"ace-icon fa fa-plus-square bigger-110\"></i>&nbsp;Add Coupon</div>",
+                                "type": "submit",
+                                "btnType": "primary ",
+                                "title": "This button allows you to Add information"
+                            },
+                            "hideExpression": "!model.COMMUNICATION_OBJID"
+                        },
+                        {
+                            "key": "TOUCHPOINT_LONG_DESCRIPTION",
+                            "type": "ep-label",
+                            "id": "clutch_dealerCoupons_modelform_touchpointDescription",
+                            "className": "col-md-8 col-lg-8  no-horizontal-padding",
+                            "templateOptions": {
+                                "title": "Description",
+                                "label": "Description:"
+                            },
+                            "hideExpression": "!model.COMMUNICATION_OBJID"
+                        }
+                    ]
+                },
+                {
+                    "id": "clutch_dealerCoupons_mainform_html3",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "key": "formData",
+                    "id": "clutch_dealerCoupons_mainform_grid",
+                    "type": "ep-genericcrud",
+                    "className": "col-md-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "",
+                        "enableFiltering": true,
+                        "enableSorting": true,
+                        "enableColumnResizing": true,
+                        "paginationPageSizes": [
+                            15,
+                            25,
+                            50
+                        ],
+                        "paginationPageSize": 15,
+                        "enableRowSelection": true,
+                        "enableSelectAll": true,
+                        "enablePaginationControls": true,
+                        "columnDefs": [{
+                                "field": "Action",
+                                "displayName": "Action",
+                                "enableFiltering": false,
+                                "enableSorting": false,
+                                "enableHiding": false,
+                                "width": "80",
+                                "cellTemplate": "<div class=\"col-xs-12 no-horizontal-padding text-center\"><button type=\"button\"class=\"btn btn-xs btn-primary\" id=\"{{ row.entity.OBJID }}\"ng-click=\"grid.appScope.formState.upsert(row.entity, 'UPDATE', grid.appScope)\"  title=\"This button allows you to Edit information\"><span class=\"glyphicon glyphicon-pencil\"></span><span ng-bind-html=\"grid.appScope.to.editActionDisplay\"></span></button>&nbsp;<button type=\"button\"class=\"btn btn-danger btn-xs\" id=\"{{ row.entity.OBJID }}\"ng-click=\"grid.appScope.formState.deleteData(row.entity, 'DELETE', grid.appScope)\" title=\"This button allows you to Delete information\" ><span class=\"glyphicon glyphicon-trash\"></span><span ng-bind-html=\"grid.appScope.to.editActionDisplay\"></span></button></div>",
+                                "cellClass": "no-horizontal-padding"
+                            },
+                            {
+                                "field": "COMMUNICATION_NAME",
+                                "displayName": "Category",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "200"
+                            },
+                            {
+                                "field": "COUPON_TITLE",
+                                "displayName": "Coupon Title",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "200"
+                            },
+                            {
+                                "field": "COUPON_SUBTITLE",
+                                "displayName": "Coupon Subtitle",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "170"
+                            },
+                            {
+                                "field": "PRICE",
+                                "displayName": "Price",
+                                "enableFiltering": true,
+                                "enableSorting": true,
+                                "enableHiding": false,
+                                "width": "100"
+                            }
+                        ],
+                        "primaryid": "OBJID",
+                        "editActionDisplay": "",
+                        "deleteActionDisplay": "",
+                        "editFormHeader": "Coupon",
+                        "modalSize": "md"
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_mainform_html4",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-md-12 col-sm-12 text-right",
+                    "id": "clutch_dealerCoupons_mainform_submit",
                     "type": "ep-button",
                     "templateOptions": {
-                        "text": "Delete cache for program new",
-                        "btn-type": "primary",
-                        "onClick": "formState.deleteProgramCache()"
+                        "text": "Continue",
+                        "onClick": "formState.continue()",
+                        "type": "submit",
+                        "btnType": "primary ",
+                        "title": "This button allows you to Continue to next form"
+                    }
+                }
+            ],
+            "ModelForm": [{
+                    "key": "COMMUNICATION_NAME",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_touchpointlabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
+                    "templateOptions": {
+                        "title": "Touchpoint",
+                        "label": "Touchpoint"
                     },
                     "expressionProperties": {
-                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                        "templateOptions.label": "formState.communicationTypeName"
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_keyName",
-                    "key": "KEY_OBJ",
-                    "type": "ep-select",
-                    "className": "col-sm-9",
+                    "id": "clutch_dealerCoupons_modelform_html1",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "key": "BRAND",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_brandlabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
                     "templateOptions": {
-                        "label": "Key Name",
-                        "valueProp": "Key_Name",
-                        "labelProp": "Key_Name",
-                        "actualModel": "selectedKey"
+                        "title": "Brand",
+                        "label": "Brand"
                     },
-                    "expressionProperties": {
-                        "templateOptions.options": "formState.cachedProgramKeys",
-                        "hide": "formState.isProgramNull || !formState.isProgSelected"
+                    "hideExpression": "model.CAMPAIGN_FLAG == 5"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html2",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>",
+                    "hideExpression": "model.CAMPAIGN_FLAG == 0"
+                },
+                {
+                    "key": "ATTRIB_VALUE",
+                    "type": "ep-label",
+                    "id": "clutch_dealerCoupons_modelform_namelabel",
+                    "className": "col-md-12 col-lg-12  no-horizontal-padding fBold",
+                    "templateOptions": {
+                        "title": "Status",
+                        "label": "Status"
+                    },
+                    "hideExpression": "model.CAMPAIGN_FLAG != 4"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html4",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_positionlabel",
+                    "key": "POSITION",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "title": "Position",
+                        "label": "Position",
+                        "required": true,
+                        "maxLength": 1,
+                        "validator": "integer"
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "\"Position is required\"",
+                            "pattern": "\"Invalid Position\""
+                        }
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 4 || formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html5",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_coupontitle",
+                    "key": "COUPON_TITLE",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Coupon Title",
+                        "required": true
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6",
+                    "validation": {
+                        "messages": {
+                            "required": "\"Coupon Title is required\""
+                        }
                     }
                 },
                 {
-                    "id": "olca_apiCacheManager_keyBtn",
-                    "className": "col-sm-3",
-                    "type": "ep-button",
+                    "id": "clutch_dealerCoupons_modelform_html6",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_couponsubtitle",
+                    "key": "COUPON_SUBTITLE",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
                     "templateOptions": {
-                        "text": "Delete cache for key",
-                        "btn-type": "primary",
-                        "onClick": "formState.deleteKeyCache()"
+                        "label": "Coupon Subtitle",
+                        "required": true
                     },
-                    "expressionProperties": {
-                        "hide": "formState.isProgramNull || formState.hideDelKeyBtn"
+                    "validation": {
+                        "messages": {
+                            "required": "\"Coupon Subtitle is required\""
+                        }
                     }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html14",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_coupon_text",
+                    "key": "COUPON_TEXT",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Coupon Text",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html7",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_price",
+                    "key": "PRICE",
+                    "type": "ep-text",
+                    "className": "col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Price",
+                        "maxLength": 50,
+                        "required": false
+                    },
+                    "validation": {
+                        "messages": {
+                            "required": "\"Price is required\""
+                        }
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html13",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_price2",
+                    "key": "PRICE2",
+                    "type": "ep-text",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding ",
+                    "templateOptions": {
+                        "label": "Price 2",
+                        "maxLength": 50
+                    }
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html8",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_expFactor",
+                    "key": "EXP_FACTOR_OBJ",
+                    "type": "ep-searchableDropdown",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "actualModel": "EXP_FACTOR",
+                        "label": "Expiration date(days)",
+                        "title": "Coupon Title",
+                        "valueProp": "TITLE",
+                        "labelProp": "TITLE",
+                        "options": [{
+                                "TITLE": "30"
+                            },
+                            {
+                                "TITLE": "60"
+                            },
+                            {
+                                "TITLE": "90"
+                            },
+                            {
+                                "TITLE": "120"
+                            },
+                            {
+                                "TITLE": "None"
+                            }
+                        ]
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html9",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer1",
+                    "key": "DISCLAIMER_1",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 1",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html10",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer2",
+                    "key": "DISCLAIMER_2",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 2",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html11",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_disclaimer3",
+                    "key": "DISCLAIMER_3",
+                    "type": "ep-textarea",
+                    "className": "col-sm-12 col-md-12 col-lg-12 no-horizontal-padding",
+                    "templateOptions": {
+                        "label": "Disclaimer 3",
+                        "autosize": false
+                    },
+                    "hideExpression": "formState.ddlfilter.CAMPAIGN_FLAG == 5 || formState.ddlfilter.CAMPAIGN_FLAG == 6"
+                },
+                {
+                    "id": "clutch_dealerCoupons_modelform_html12",
+                    "template": "<div class=\"col-md-12 col-sm-12 space-4\"></div>"
+                },
+                {
+                    "className": "col-xs-12 col-sm-12",
+                    "$$hashKey": "clutch_dealerCoupons_modelform_fieldGroup1",
+                    "fieldGroup": [{
+                            "className": "pull-right  no-horizontal-padding ",
+                            "id": "clutch_dealerCoupons_modelform_fieldGroup1_closeButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "text": "<i class=\"ace-icon fa fa-close bigger-110\"></i>&nbsp;Close",
+                                "onClick": "formState.close(model,this.form)",
+                                "type": "submit",
+                                "btnType": "btn  btn-primary",
+                                "title": "This button allows you to Close information"
+                            }
+                        },
+                        {
+                            "className": "pull-right no-horizontal-padding ",
+                            "id": "clutch_dealerCoupons_modelform_fieldGroup1_saveButton",
+                            "type": "ep-button",
+                            "templateOptions": {
+                                "text": "<i class=\"ace-icon fa fa-save\"></i>&nbsp;Save/Done",
+                                "onClick": "formState.upsertData(model,this.form,true)",
+                                "type": "submit",
+                                "btnType": "primary ",
+                                "title": "This button allows you to Save information"
+                            }
+                        }
+                    ]
                 }
             ]
         }, undefined, 2);
@@ -174,82 +976,6 @@
             }
 
         }
-
-        vm.JsonDummyText = "";
-        vm.keysArray = [];
-        vm.valsArray = [];
-        vm.showAllPaths = function (leftJsonString, rightJsonString) {
-            vm.valsArray = [];
-            var leftJson = leftJsonString ? JSON.parse(leftJsonString) : {};
-            var rightJson = rightJsonString ? JSON.parse(rightJsonString) : {};
-            vm.keysArray = parseKeys(leftJson);
-        }
-
-        /**
-         * Parse each property and find out 
-         */
-        var parseKeys = function (obj, keyString) {
-            var _keyString = keyString || '';
-            var keysArray = [];
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    /** check if the value is an object
-                     * and if it is, then run the parseKeys
-                     * function with value as the array,
-                     * and as keyString + "." + key
-                     * keyString param
-                     */
-                    if (obj[key].constructor === {}.constructor) {
-                        var array = parseKeys(obj[key], _keyString + "[\"" + key + "\"]");
-                        keysArray = keysArray.concat(array);
-                    } else {
-                        keysArray.push(_keyString + "[\"" + key + "\"]");
-                    }
-                }
-            }
-            return keysArray;
-        }
-
-        /** stringify an array */
-        var stringifyArray = function (arrayObj) {
-            var resultString = '[';
-            arrayObj.forEach(function (element) {
-                resultString = resultString + JSON.stringify(element, undefined, 2) + ',';
-            }, this);
-            resultString = trimCommas(resultString) + ']';
-            return resultString;
-        }
-
-        var trimCommas = function (str) {
-            return str.replace(/(^,)|(,$)/g, "");
-        }
-
-        /**
-         * Compare 2 objects
-         */
-        // vm.compareAndGetDiffJson = function (leftJson, rightJson) {
-        //     vm.diffObject = {};
-        //     var leftJsonObj = JSON.parse(leftJson);
-        //     var righJsonObj = JSON.parse(rightJson);
-        //     var leftStringArray = parseKeys(leftJsonObj);
-        //     var rightStringArray = parseKeys(righJsonObj);
-        //     for (var index = 0; index < rightStringArray.length; index++) {
-        //         var rightString = rightStringArray[index];
-        //         /** check if the left JSON contains this property */
-        //         if (checkPropertyPathUsingEval(leftJsonObj, rightString)) {
-        //             /** check if the value is same on the right json */
-        //             var valueCheck = valueCompare(eval(cleanStringForCompare('leftJsonObj' + rightString)), eval(cleanStringForCompare('righJsonObj' + rightString)));
-        //             var checkBool = eval(cleanStringForCompare('leftJsonObj' + rightString)) === eval(cleanStringForCompare('righJsonObj' + rightString));
-        //             if (!valueCheck) {
-        //                 vm.assignValTo(rightString, righJsonObj);
-        //             }
-        //         } else {
-        //             vm.assignValTo(rightString, righJsonObj);
-        //         }
-        //     }
-        //     vm.diffObjectString = JSON.stringify(vm.diffObject, undefined, 2);
-        // }
-
         vm.differences = [];
         vm.compareAndGetDiffJson = function (leftJson, rightJson) {
             vm.diffObject = {};
@@ -261,112 +987,53 @@
             //     vm.differences.push(d);
             // });
             vm.differences = deep.diff(leftJsonObj, righJsonObj);
-            vm.testPathSetValue(vm.differences);
+            vm.diffObjectString = vm.testPathSetValue(vm.differences, righJsonObj);
         }
-
-
         /** Method to test jsonQ */
-        vm.testPathSetValue = function (differences) {
+        vm.testPathSetValue = function (differences, mergedJson) {
             var overrideJSON = jsonQ({});
-            differences.forEach(element => {
-                overrideJSON.setPathValue(element.path, element.rhs);
+            /** find all the id's in the merged JSOn and assign it to a new override JSON */
+            var mergedJsonQobj = jsonQ(mergedJson);
+            var idDetailsArray = mergedJsonQobj.find('id');
+            idDetailsArray.jsonQ_current.forEach(element => {
+                overrideJSON.setPathValue(element.path, mergedJsonQobj.pathValue(element.path));
             });
-            console.log(overrideJSON.jsonQ_root);
-        }
 
-        var checkPropertyPathUsingEval = function (obj, objPropPath) {
-            var result = false;
-            try {
-                result = eval('obj' + objPropPath);
-            } catch (error) {
-                console.log('Path not found in the left object');
+            if (differences && differences.length > 0) {
+                differences.forEach(element => {
+                    overrideJSON.setPathValue(element.path, element.rhs);
+                });
             }
-            return result;
-        }
-
-        var cleanStringForCompare = function (dirtyString) {
-            return dirtyString.replace(/'/g, '"');
-        }
-
-        var valueCompare = function (leftValue, rightValue) {
-            /** Check the type */
-            if (leftValue.constructor === rightValue.constructor) {
-                /** in case the objects are of the same type */
-                /** check if they are array */
-                if (leftValue.constructor === [].constructor) {
-                    /** compare arrays */
-                    return compareArrays(leftValue, rightValue);
-                    /** check if they are objects */
-                } else if (leftValue.constructor === {}.constructor) {
-                    /** compare objects */
-                    return compareObjects(leftValue, rightValue);
-                } else {
-                    return leftValue === rightValue;
+            var resultObj = {};
+            for (var key in overrideJSON.jsonQ_root) {
+                if (overrideJSON.jsonQ_root.hasOwnProperty(key)) {
+                    resultObj[key] = $.map(overrideJSON.jsonQ_root[key], function (el) {
+                        return el
+                    });
                 }
-            } else {
-                /** in case the objects are not of the same type */
-                return false;
             }
-        }
-
-        var compareObjects = function (leftObject, rightObject) {
-            /** if object compare each property  */
-            return JSON.stringify(leftObject) === JSON.stringify(rightObject);
-        }
-
-        var compareArrays = function (leftArray, rightArray) {
-            /** if object compare each item  */
-            if (leftArray.length === rightArray.length) {
-                for (var index = 0; index < leftArray.length; index++) {
-                    var element = leftArray[index];
-                    if (!valueCompare(leftArray[index], rightArray[index])) {
-                        return false;
-                    }
-                }
-            } else {
-                return false;
-            }
-            return true;
-        }
-
-        vm.assignValTo = function (propString, rightJson, diffObjVariableName) {
-            var _diffObjVariableName = diffObjVariableName || 'vm.diffObject';
-            if (vm.checkAndCreatePropertyIfNeeded(propString))
-                eval(_diffObjVariableName + propString + '= rightJson' + propString);
-            //console.log(vm.diffObject);
-        }
-
-        vm.getPropConcatArray = function (propString) {
-            propString = propString.replace(/\["/g, '|').replace(/"\]/g, '');
-            propString = propString.substring(1);
-            var propArray = propString.split('|');
-            var propConcatArray = [];
-            for (var index = 1; index <= propArray.length; index++) {
-                var stringVal = '';
-                for (var j = 0; j < index; j++) {
-                    stringVal = stringVal + '["' + propArray[j] + '"]';
-                }
-                propConcatArray.push(stringVal);
-            }
-            return propConcatArray;
-        }
-
-        vm.checkAndCreatePropertyIfNeeded = function (propString) {
-            var result = false;
-            var propConcatArray = vm.getPropConcatArray(propString);
-            /** now that you have the array of concated string paths
-             * in an ascending order check each path and make sure that the object is
-             * having all the paths
-             */
-            propConcatArray.forEach(function (element) {
-                if (!eval('vm.diffObject' + element)) {
-                    eval('vm.diffObject' + element + '= {};');
+            var arrayedParentsFromResultObj = jsonQ(resultObj).find('0').parent();
+            console.log(arrayedParentsFromResultObj);
+            var keysForArrayConversion = [];
+            arrayedParentsFromResultObj.jsonQ_current.forEach(element => {
+                keysForArrayConversion.push(_.last(element.path));
+            });
+            // extract unique items
+            keysForArrayConversion = _.uniq(keysForArrayConversion);
+            /** loop through the keys for conversion and convert them to array */
+            console.log(keysForArrayConversion);
+            var objectsForArrayConversion = [];
+            keysForArrayConversion.forEach(element => {
+                var tempPathArray = jsonQ(resultObj).find(element).jsonQ_current;
+                var tempValueArray = jsonQ(resultObj).find(element).value();
+                for (var index = 0; index < tempPathArray.length; index++) {
+                    var pathObj = tempPathArray[index];
+                    var arrayObj = _.toArray(tempValueArray[index])
+                    jsonQ(resultObj).setPathValue(pathObj.path, arrayObj);
                 }
             });
-            if (eval('vm.diffObject' + propString)) {
-                result = true;
-            }
-            return result;
+
+            return resultObj;
         }
     }
 })();

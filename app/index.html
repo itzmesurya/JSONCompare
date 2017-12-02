@@ -21,10 +21,10 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <textarea ng-model="vm.leftJson" name="leftJsonTextArea" id="leftJsonTextArea" ng-change="vm.textAreaChange($event, 'left')" class="json-textarea" cols="30" rows="11"></textarea>
+                <textarea ng-model="vm.leftJson" name="leftJsonTextArea" id="leftJsonTextArea" ng-change="vm.textAreaChange($event, 'left')" class="json-textarea" cols="30" rows="30"></textarea>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <textarea ng-model="vm.rightJson" name="rightJsonTextArea" id="rightJsonTextArea" ng-change="vm.textAreaChange($event, 'right')" class="json-textarea" cols="30" rows="11"></textarea>
+                <textarea ng-model="vm.rightJson" name="rightJsonTextArea" id="rightJsonTextArea" ng-change="vm.textAreaChange($event, 'right')" class="json-textarea" cols="30" rows="30"></textarea>
             </div>
         </div>
         <br>
@@ -32,32 +32,10 @@
             <button type="button" ng-click="vm.compareAndGetDiffJson(vm.leftJson, vm.rightJson)" class="btn btn-primary">Get JSON Diff</button>
         </div>
         <br>
-        
-        <div class="row">
-            
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <textarea ng-model="vm.diffObjectString" name="diffJsonTextArea" id="diffJsonTextArea" class="json-textarea" cols="30" rows="11"></textarea>
-            </div>
-            
-        </div>
-        
         <br>
         <div class="row">
-            <div class="diffObj" ng-repeat="diff in vm.differences">
-                <pre>{{diff | json}}</pre>
-            </div>
-        </div>
-        <br>
-        <div  class="row">
-            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-            </div>
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <pre ng-repeat="item in vm.keysArray">{{item}}</pre>
-            </div>
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <pre ng-repeat="item in vm.valsArray track by $index">{{item}}</pre>
-            </div>
-            <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 diffObj">
+                <pre>{{vm.diffObjectString | json}}</pre>
             </div>
         </div>
     </div>
